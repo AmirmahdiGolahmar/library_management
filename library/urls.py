@@ -1,4 +1,11 @@
-from library_management.urls import urlpatterns
+"""URL configuration for the library app."""
 
-# urlpatterns = [
-# ]
+from django.urls import path
+
+from . import views
+
+
+urlpatterns = [
+    path("login/", views.login_view, name="login"),
+]
+
