@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ view.object|default:'New Book' }}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #EEAECA;
+            background: radial-gradient(circle,rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+            height: 100vh;
+        }
+        .card-custom{
+            background-color: rgba(255, 255, 255, .7);
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow rounded-4 border-0 card-custom">
+                <div class="card-body p-4">
+                    <h1 class="h4 text-center mb-4">
+                        {{ view.object|default:'New Book' }}
+                    </h1>
+
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="id_title" class="form-label">Title</label>
+                            <input type="text" name="title" id="id_title"
+                                   class="form-control"
+                                   value="{{ form.title.value|default_if_none:'' }}">
+                            {% if form.title.errors %}
+                                <div class="text-danger small">{{ form.title.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Picture -->
+                        <div class="mb-3">
+                            <label for="id_picture" class="form-label">Book Cover</label>
+                            <input type="file" name="picture" id="id_picture"
+                                   class="form-control">
+                            {% if form.picture.value %}
+                                <small class="d-block mt-1">Current: {{ form.picture.value }}</small>
+                            {% endif %}
+                            {% if form.picture.errors %}
+                                <div class="text-danger small">{{ form.picture.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Authors -->
+                        <div class="mb-3">
+                            <label for="id_author" class="form-label">Authors</label>
+                            <select name="author" id="id_author" class="form-select" multiple>
+                                {% for choice in form.author.field.queryset %}
+                                    <option value="{{ choice.pk }}"
+                                        {% if choice.pk in form.author.value %}selected{% endif %}>
+                                        {{ choice }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">Hold Ctrl (Windows) or Command (Mac) to select multiple authors.</div>
+                            {% if form.author.errors %}
+                                <div class="text-danger small">{{ form.author.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Price -->
+                        <div class="mb-3">
+                            <label for="id_price" class="form-label">Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" name="price" id="id_price"
+                                       class="form-control"
+                                       step="1" min="0"
+                                       value="{{ form.price.value|default_if_none:'' }}"
+                                >
+                            </div>
+                            {% if form.price.errors %}
+                                <div class="text-danger small">{{ form.price.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Publisher -->
+                        <div class="mb-3">
+                            <label for="id_publisher" class="form-label">Publisher</label>
+                            <input type="text" name="publisher" id="id_publisher"
+                                   class="form-control"
+                                   value="{{ form.publisher.value|default_if_none:'' }}">
+                            {% if form.publisher.errors %}
+                                <div class="text-danger small">{{ form.publisher.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Publish Date -->
+                        <div class="mb-3">
+                            <label for="id_publish_date" class="form-label">Publish Date</label>
+                            <input type="date" name="publish_date" id="id_publish_date"
+                                   class="form-control"
+                                   value="{{ form.publish_date.value|default_if_none:'' }}">
+                            {% if form.publish_date.errors %}
+                                <div class="text-danger small">{{ form.publish_date.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Genre -->
+                        <div class="mb-3">
+                            <label for="id_genre" class="form-label">Genre</label>
+                            <select name="genre" id="id_genre" class="form-select">
+                                {% for code, label in form.genre.field.choices %}
+                                    {% if code %}
+                                        <option value="{{ code }}"
+                                            {% if form.genre.value == code %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% if form.genre.errors %}
+                                <div class="text-danger small">{{ form.genre.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'book-list' %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

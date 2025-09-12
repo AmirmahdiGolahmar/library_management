@@ -1,5 +1,5 @@
 import random
-from datetime import datetime, timedelta, date
+from datetime import timedelta, date
 
 from django.core.management.base import BaseCommand
 from django.utils import timezone
@@ -33,22 +33,32 @@ class Command(BaseCommand):
             first = fake.first_name()
             last = fake.last_name()
             email = f"{first}.{last}@example.com".lower()
-            # Birth dates: between 1940-01-01 and 2000-12-31
             birth = fake.date_between_dates(
                 date_start=date(1940, 1, 1), date_end=date(2000, 12, 31)
             )
-            authors.append(Author(first_name=first, last_name=last, email=email, birth_date=birth))
+            bio = fake.paragraph(nb_sentences=3)  # 🔹 متن کوتاه برای بیوگرافی
+            authors.append(
+                Author(
+                    first_name=first,
+                    last_name=last,
+                    email=email,
+                    birth_date=birth,
+                    bio=bio
+                )
+            )
         Author.objects.bulk_create(authors)
         authors = list(Author.objects.all())
 
         # --- Books ---
         def random_publish_datetime():
-            # Random datetime in the last 40 years
             end = timezone.now()
             start = end - timedelta(days=40 * 365)
-            # Faker's date_time_between returns naive dt; make timezone-aware
             naive = fake.date_time_between(start_date=start, end_date=end)
-            return timezone.make_aware(naive, timezone.get_current_timezone()) if timezone.is_naive(naive) else naive
+            return (
+                timezone.make_aware(naive, timezone.get_current_timezone())
+                if timezone.is_naive(naive)
+                else naive
+            )
 
         GENRE_CODES = [choice[0] for choice in Book.GENRE_CHOICES]
 
@@ -59,17 +69,30 @@ class Command(BaseCommand):
             publisher = fake.company()[:50]
             publish_dt = random_publish_datetime()
             genre = random.choice(GENRE_CODES)
-            books.append(Book(title=title[:50], publisher=publisher, publish_date=publish_dt, genre=genre))
+            picture_url = f"https://picsum.photos/seed/{random.randint(1,9999)}/200/300"
+            price = fake.pyfloat(left_digits=2, right_digits=2, positive=True, min_value=5, max_value=100)
+
+            books.append(
+                Book(
+                    title=title[:50],
+                    publisher=publisher,
+                    publish_date=publish_dt,
+                    genre=genre,
+                    picture=picture_url,
+                    price=price,
+                )
+            )
 
         Book.objects.bulk_create(books)
 
-        # M2M assignments (must happen after Books exist)
+        # --- M2M assignments (بعد از ذخیره Books)
         books = list(Book.objects.all())
         for b in books:
-            # Each book gets 1–3 random authors
             count = random.randint(1, min(3, len(authors)))
             b.author.set(random.sample(authors, count))
 
-        self.stdout.write(self.style.SUCCESS(
-            f"Done! Authors: {Author.objects.count()}, Books: {Book.objects.count()}"
-        ))
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Done! Authors: {Author.objects.count()}, Books: {Book.objects.count()}"
+            )
+        )

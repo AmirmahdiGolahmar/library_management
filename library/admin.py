@@ -7,7 +7,7 @@ from library.models import Book, Author
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'id', 'get_authors', 'publisher', )
+    list_display = ('title', 'id', 'get_authors', 'publisher', 'picture')
     list_filter = ('genre',)
     search_fields = ('title','author__first_name', 'author__last_name' ,'publisher')
     ordering = ('publish_date',)
@@ -19,6 +19,6 @@ class BookAdmin(admin.ModelAdmin):
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ( 'last_name', 'first_name', 'id', 'email')
+    list_display = ( 'last_name', 'first_name', 'id', 'email', 'bio')
     search_fields = ('last_name', 'first_name', 'email')
     list_per_page = 20

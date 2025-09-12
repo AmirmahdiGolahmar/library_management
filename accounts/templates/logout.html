@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Logged Out</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+
+  <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 420px; width: 100%;">
+    <div class="card-body text-center">
+{#      <!-- Icon -->#}
+{#      <div class="mb-3">#}
+{#        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" class="bi bi-box-arrow-right text-danger" viewBox="0 0 16 16">#}
+{#          <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h2.5v8H10a.5.5 0 0 0-.5.5zm-2.854-2.646a.5.5 0 0 0 .708.708L9.707 9.707A1 1 0 0 0 9 8H1.5a.5.5 0 0 0 0 1H9c.066 0 .13.013.188.036l-2.042 2.042z"/>#}
+{#        </svg>#}
+{#      </div>#}
+
+      <!-- Text -->
+      <h2 class="h4 mb-3">You have been logged out</h2>
+      <p class="text-muted mb-4">We hope to see you again soon!</p>
+
+      <!-- Button -->
+      <a href="{% url 'login' %}" class="btn btn-primary w-100">Login Again</a>
+      <!-- Button -->
+      <a href="{% url 'home' %}" class="btn btn-primary w-100 mt-4">Home</a>
+    </div>
+  </div>
+
+</body>
+</html>
