@@ -6,7 +6,7 @@ from .views import (
 )
 urlpatterns = [
     # ---------- Home ----------
-    path("home/", home_view, name="home"),
+    path("", home_view, name="home"),
 
     # ---------- Author ----------
     path("authors/", AuthorListView.as_view(), name="author-list"),

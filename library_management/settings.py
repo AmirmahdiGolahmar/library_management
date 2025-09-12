@@ -26,7 +26,11 @@ SECRET_KEY = 'django-insecure-liavfp7i!h4^=a8k0&^m+#jm%@z%+w(z$m!7pf)^wz*+0l-p@q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.ngrok-free.app',
+]
 
 LOGIN_REDIRECT_URL = '/home/'
 # LOGOUT_REDIRECT_URL = '/login/'
@@ -122,7 +126,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.ngrok-free.app",
+]

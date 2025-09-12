@@ -24,8 +24,15 @@ class BookForm(forms.ModelForm):
         ]
         widgets = {
             "author": forms.SelectMultiple(attrs={"size": 8}),
-            "publish_date": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+            "publish_date": forms.DateInput(
+                attrs={"type": "date"}, format="%Y-%m-%d"
+            ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.publish_date:
+            self.initial["publish_date"] = self.instance.publish_date.strftime("%Y-%m-%d")
 
     # Optional: clean publish_date from HTML5 datetime-local (no TZ)
     def clean_publish_date(self):

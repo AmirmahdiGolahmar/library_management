@@ -6,6 +6,9 @@ from django.utils import timezone
 from faker import Faker
 
 from library.models import Author, Book
+import os
+
+from library_management import settings
 
 
 class Command(BaseCommand):
@@ -64,12 +67,18 @@ class Command(BaseCommand):
 
         self.stdout.write(f"Creating {num_books} books...")
         books = []
+
+        IMAGE_DIR = os.path.join(settings.MEDIA_ROOT, "book_pics")
+        image_files = [f for f in os.listdir(IMAGE_DIR) if f.lower().endswith((".jpg", ".jpeg", ".png"))]
+        BASE_PIC = "book_pics"
+
         for _ in range(num_books):
             title = fake.sentence(nb_words=4).rstrip(".")
             publisher = fake.company()[:50]
             publish_dt = random_publish_datetime()
             genre = random.choice(GENRE_CODES)
-            picture_url = f"https://picsum.photos/seed/{random.randint(1,9999)}/200/300"
+            pic = f"{BASE_PIC}/{random.choice(image_files)}"
+
             price = fake.pyfloat(left_digits=2, right_digits=2, positive=True, min_value=5, max_value=100)
 
             books.append(
@@ -78,7 +87,7 @@ class Command(BaseCommand):
                     publisher=publisher,
                     publish_date=publish_dt,
                     genre=genre,
-                    picture=picture_url,
+                    picture=pic,
                     price=price,
                 )
             )
